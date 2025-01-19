@@ -20,16 +20,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_19_094218) do
   end
 
   create_table "flights", force: :cascade do |t|
-    t.integer "departure_airport_id", null: false
-    t.integer "arrival_airport_id", null: false
+    t.string "departure_airport_id", null: false
+    t.string "arrival_airport_id", null: false
     t.datetime "departure_time", null: false
     t.datetime "arrival_time", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["arrival_airport_id"], name: "index_flights_on_arrival_airport_id"
-    t.index ["departure_airport_id"], name: "index_flights_on_departure_airport_id"
   end
 
-  add_foreign_key "flights", "airports", column: "arrival_airport_id"
-  add_foreign_key "flights", "airports", column: "departure_airport_id"
+  add_foreign_key "flights", "airports", column: "arrival_airport_id", primary_key: "code"
+  add_foreign_key "flights", "airports", column: "departure_airport_id", primary_key: "code"
 end
