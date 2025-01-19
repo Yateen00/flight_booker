@@ -1,0 +1,19 @@
+---
+glob: "**/*.{html,text,js}{+*,}.erb"
+exclude:
+  - "**/vendor/**/*"
+  - "**/node_modules/**/*"
+linters:
+  ErbSafety:
+    enabled: true
+    better_html_config: .better-html.yml
+  Rubocop:
+    enabled: true
+    rubocop_config:
+      inherit_from:
+        - .rubocop.yml
+# https://github.com/Shopify/erb_lint
+
+# alt: https://github.com/r7kamura/rubocop-erb
+
+#entire rails: https://github.com/rubocop/rubocop-rails
