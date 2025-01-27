@@ -15,6 +15,21 @@ class Flight < ApplicationRecord
     format: { with: /\A[A-Z]+\z/, message: "only allows uppercase letters" }
   validate :arrival_time_after_departure_time
 
+  def arrival_airport_name
+    arrival_airport.name
+  end
+
+  def departure_airport_name
+    departure_airport.name
+  end
+
+  def departure_time_str
+    departure_time.strftime("%Y-%m-%d %H:%M")
+  end
+  def departure_time_date_str
+    departure_time.strftime("%Y-%m-%d")
+  end
+
   private
     def capitalize_airports
       self.departure_airport_id = departure_airport_id.upcase if departure_airport_id.present?

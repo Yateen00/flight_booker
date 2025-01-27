@@ -1,12 +1,44 @@
-<p style="color: green"><%= notice %></p>
+<% if flash[:alert] %>
+  <p style="color: red"><%= flash[:alert] %></p>
+<% end %>
 
 <% content_for :title, "Flights" %>
 
 <h1>Flights</h1>
 
-<div id="flights">
-  <% @flights.each do |flight| %>
-    <%= render flight %>
+<%= form_with model: @flight_search, url: flights_path, method: :get, scope: :flight_search, local: true do |f| %>
+  <div>
+    <%= f.label :departure_airport_id, "Select Departure Airport" %>
+    <%= f.collection_select :departure_airport_id, @flights.select(:departure_airport_id).distinct.order(:departure_airport_id), :departure_airport_id, :departure_airport_name, prompt: "Select Departure Airport" %>
+  </div>
+  <div>
+    <%= f.label :arrival_airport_id, "Select Arrival Airport" %>
+    <%= f.collection_select :arrival_airport_id, @flights.select(:arrival_airport_id).distinct.order(:arrival_airport_id), :arrival_airport_id, :arrival_airport_name, prompt: "Select Arrival Airport" %>
+  </div>
+  <div>
+    <%= f.label :number, "Select Passenger Count" %>
+    <%= f.collection_select :number, (1..4).to_a, :to_s, :to_s, prompt: "Select passenger count" %>
+  </div>
+  <div>
+    <%= f.label :departure_time, "Departure Date" %>
+    <%= f.select :departure_time, options_from_collection_for_select(@flights.select("DISTINCT DATE(departure_time) AS departure_date").order("departure_date"), :departure_date, :departure_date), prompt: "Select Date" %>
+  </div>
+  <%= f.submit "Search" %>
+<% end %>
 
+<% if @search_result.present? %>
+  <h2>Search Results</h2>
+  <div>
+    <strong>Departure Airport:</strong> <%= @search_result.first.departure_airport_name %> <br>
+    <strong>Arrival Airport:</strong> <%= @search_result.first.arrival_airport_name %> <br>
+    <strong>Flights:</strong>
+  </div>
+
+  <%= form_with url: new_booking_path, method: :get do |f| %>
+    <%= f.collection_radio_buttons :flight_id, @search_result, :id, :departure_time_str %>
+    <%= f.hidden_field :number , value: @flight_search.number %>
+    <%= f.submit "Book Flight" %>
   <% end %>
-</div>
+<% else %>
+  <p>No search results found.</p>
+<% end %>
