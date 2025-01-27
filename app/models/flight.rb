@@ -6,7 +6,7 @@ class Flight < ApplicationRecord
     inverse_of: "arriving_flights"
 
   before_validation :capitalize_airports
-
+  has_many :bookings
 
   validates :departure_airport_id, :arrival_airport_id, :departure_time, :arrival_time,
     presence: true
