@@ -1,4 +1,4 @@
-<%= form_with(model: booking) do |f| %>
+<%= form_with(model: booking, local: true) do |f| %>
   <% if booking.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(booking.errors.count, "error") %> prohibited this booking from being saved:</h2>
@@ -10,7 +10,9 @@
       </ul>
     </div>
   <% end %>
+
   <%= f.hidden_field :flight_id %>
+
   <div>
     <strong>Departure Airport:</strong> <%= @flight.departure_airport_name %> <br>
     <strong>Arrival Airport:</strong> <%= @flight.arrival_airport_name %> <br>
@@ -18,19 +20,20 @@
   </div>
 
   <h3>Passengers</h3>
-  <%= f.fields_for :passengers do |p| %>
-    <div>
-      <%= p.label :name %>
-      <%= p.text_field :name %>
+  <div data-controller="passenger">
+    <div data-passenger-target="passenger">
+      <%= f.fields_for :passengers do |p| %>
+        <%= render 'passenger_fields', f: p %>
+      <% end %>
     </div>
-    <div>
-      <%= p.label :number %>
-      <%= p.telephone_field :number %>
-    </div>
-    <br>
-    <br>
-    <br>
-  <% end %>
+    <button data-action="click->passenger#addPassenger">Add passenger</button>
+
+    <template data-passenger-target="template">
+      <%= f.fields_for :passengers, Passenger.new, child_index: 'TEMPLATE_RECORD' do |p| %>
+        <%= render 'passenger_fields', f: p %>
+      <% end %>
+    </template>
+  </div>
 
   <div>
     <%= f.submit %>

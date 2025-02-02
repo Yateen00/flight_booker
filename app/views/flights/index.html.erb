@@ -39,6 +39,6 @@
     <%= f.hidden_field :number , value: @flight_search.number %>
     <%= f.submit "Book Flight" %>
   <% end %>
-<% else %>
+<% elsif !@search_result.nil? %>
   <p>No search results found.</p>
 <% end %>

@@ -13,11 +13,15 @@ class FlightSearchForm
     @arrival_airport_id.present? && @departure_airport_id.present? && @number.present? && @departure_time.present?
   end
   def incomplete_query?
-    val = @arrival_airport_id.blank? || @departure_airport_id.blank? || @number.blank? || @departure_time.blank?
-    if val
+    any_blank = @arrival_airport_id.blank? || @departure_airport_id.blank? || @number.blank? || @departure_time.blank?
+    all_blank = @arrival_airport_id.blank? && @departure_airport_id.blank? && @number.blank? && @departure_time.blank?
+
+    if any_blank && !all_blank
       @error_message = "Please fill in all fields."
+      return true
     end
-    val
+
+    false
   end
   def query
     {
